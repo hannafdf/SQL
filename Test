@@ -1,0 +1,6 @@
+1 Написать SQL запрос:
+1.1 В таблице Product, столбец body представлен в виде Json объекта, в нём необходимо 
+найти записи с ссылкой https://test.site.com/storage/images/Test-Final-Blue.png и изменить её фрагмент, 
+чтобы в итоге была - https://test-wapi.site.com/storage/images/Test-Final-Blue.png
+
+UPDATE product1 SET body = jsonb_set(body::jsonb, '{body}', '"https://test-wapi.site.com/storage/images/Test-Final-Blue.png"'::jsonb, FALSE) where id in (select id from product where (body->'body')::jsonb ? 'https://test.site.com/storage/images/Test-Final-Blue.png')
