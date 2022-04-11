@@ -1,0 +1,47 @@
+create table City21 (
+	id serial,
+	title varchar (30)
+);
+
+select * from City21 
+
+insert into City21(title)
+values ('Warshaw'),
+('Dubau'),
+('Budapest'),
+('New York'),
+('Krakow'),
+('Vilnus'),
+('London')
+
+drop table ... - удаление таблицы
+
+create table Persons21 (
+person_name varchar (80),
+city_id int
+);
+
+select * from Persons21
+
+insert into Persons21(person_name, city_id)
+values ('Alex', 2),
+('Dmitry', 4),
+('Anna', 1),
+('Victor', 5),
+('Natalia', 3),
+('Sergey', 1),
+('Tanya', 6),
+('Ignat', 9),
+('Anton', 15)
+
+select * from Persons21 join City21
+on Persons21.City_id = city21.id
+
+select * from Persons21 left join City21
+on Persons21.City_id = city21.id
+
+select * from Persons21 right join City21
+on Persons21.City_id = city21.id
+
+select * from Persons21 full join City21
+on Persons21.City_id = city21.id
