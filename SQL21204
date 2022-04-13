@@ -289,3 +289,21 @@ values (default, 41, 1),
 (default, 3, 18),
 (default, 2, 19),
 (default, 1, 20)
+
+select roles21.role_name, salary21.monthly_salary from roles21
+join employee_salary21 on roles21.id = employee_salary21.employee_id
+join salary21 on employee_salary21.salary_id = salary21.id
+where monthly_salary < 2000
+
+count(*)
+
+select count(*) from roles21
+join employee_salary21 on roles21.id = employee_salary21.employee_id
+join salary21 on employee_salary21.salary_id = salary21.id
+where monthly_salary < 1500
+
+select sum(monthly_salary) from roles21
+join employee_salary21 on roles21.id = employee_salary21.employee_id
+join salary21 on employee_salary21.salary_id = salary21.id
+where monthly_salary < 1800
+
