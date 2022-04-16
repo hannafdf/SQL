@@ -1,0 +1,173 @@
+-- Подобие создания интернет магазина
+
+create table phones_apple21 ( 
+id serial primary key,
+model varchar (40),
+ram int not null,
+front_camera int,
+price int
+)
+
+select * from phones_apple21
+
+insert into phones_apple21 (model, ram, front_camera, price)
+values ('13', 8, 12, 1400),
+('13pro', 10, 24, 2400),
+('12', 6, 10, 1000),
+('12pro', 8, 12, 1700),
+('11', 6, 8, 900),
+('11pro', 8, 16, 1200),
+('X', 4, 10, 800),
+('6s', 4, 8, 500),
+('6', 4, 8, 300),
+('Ipod', 6, 10, 200)
+
+
+
+create table phones_samsung21(
+ id serial primary key,
+ model varchar(40),
+ ram int not null,
+ front_camera int,
+ price int
+)
+
+select * from phones_samsung21;
+
+insert into phones_samsung21(model, ram, front_camera, price)
+values ('A20', 1, 3, 150), 
+('A50', 6, 10, 300),
+    ('A50', 8, 10, 400),
+    ('A52', 8, 16, 500),
+    ('S20', 8, 24, 1500),
+    ('S21', 8, 12, 1000),
+    ('S22', 6, 12, 1200),
+    ('A71', 6, 12, 1200),
+    ('A91', 4, 12, 1900),
+    ('A57', 8, 8, 900),
+    ('A32', 8, 4, 800),
+    ('A33', 8, 5, 750),
+    ('A43', 8, 5, 850)
+  
+
+
+
+create table samsung_orders21(
+ id serial primary key,
+ phone_id int
+)
+
+
+select * from samsung_orders21
+
+select * from apple_orders21
+
+create table apple_orders21(
+ id serial primary key,
+ phone_id int
+)
+
+insert into apple_orders21(phone_id)
+values (3),
+    (9),
+    (5),
+    (1),
+    (4)
+
+insert into samsung_orders21(phone_id)
+values (1),
+    (7),
+    (3),
+    (4),
+    (6)
+
+select * from phones_apple21
+where price > (select avg (price) from phones_apple21);
+
+select * from phones_apple21
+where price < (select avg (price) from phones_apple21);
+
+-- Найти телефоны Apple, которые дороже среднего Samsung
+select * from phones_apple21
+where price > (select avg (price) from phones_samsung21);
+
+-- Вывести среднюю стоимость телефона Samsung
+select avg(price) from phones_samsung21
+
+
+-- Запрос в подзапросе 
+select * from phones_apple21
+where price > (select avg(price) from phones_samsung21
+where price < (select avg(price) from phones_apple21));
+
+
+-- Запрос возвращает несколько значений (вернуть телефоны apple, которые стоят столько же сколько и телефоны samsung)
+select * from phones_apple21
+where price in (select price from phones_samsung21);
+
+
+--Вывести телефоны по которым есть заказы
+select * from phones_apple21
+where id in (select phone_id from apple_orders21);
+
+
+--Вывести телефоны по которым нет заказов
+select * from phones_apple21
+where id not in (select phone_id from apple_orders21);
+
+-- all - больше максимального 
+-- any - больше минимального
+
+--Запрос где стоимость телефонов samsung больше чем все стоимости телефонов apple(т.е. больше чем 900) , где цена < 1000
+select * from phones_samsung21
+where price > all (select price from phones_apple21 where price < 1000)
+order by price;
+
+select * from phones_samsung21
+where price > all (select price from phones_apple21 where price < 1000 order by price asc)
+order by price;
+
+
+-- Сортировка по возрастанию 
+select price from phones_samsung21 order by price asc
+
+
+--Возращаем телефоны samsung, которые будут дороже самого минимальной по стоимости apple
+select * from phones_samsung21
+where price > any (select price from phones_apple21 where price < 1000 order by price asc)
+order by price;
+-- x > any (1, 2) --->  x > 1
+-- x = any (1, 2) --->  x IN (1, 2)
+
+-- меньше максимального числа (т.е. меньше 900)
+select * from phones_samsung21
+where price < any (select price from phones_apple21 where price < 1000 order by price asc)
+order by price;
+          
+--Запрос, который вернет телефоны, которые меньше или больше запроса, который выводит это значение (select price
+-- from phones_apple21 where price < 1000 order by price asc), вернет всё
+select * from phones_samsung21
+where price <> any (select price from phones_apple21 where price < 1000 order by price asc)
+order by price;
+
+-- Групирующие запросы
+
+-- Выбираем телефоны по оперативной памяти, у которых минимальная цена на эту группу. 
+select ram, min(price) from phones_apple21 group by (ram);
+
+-- Выбираем телефоны по оперативной памяти, у которых средняя цена на эту группу. 
+select ram, avg (price) from phones_apple21 group by (ram);
+
+-- Выбираем телефоны по оперативной памяти, у которых максимальная цена на эту группу.
+select ram, max (price) from phones_apple21 group by (ram);
+
+
+-- union all  объединяет набор результатов, и выведет абсолютно все строки, даже дубли
+select ram, model from phones_apple21 
+union all select ram, model from phones_samsung21;
+
+select ram, price from phones_apple21 where price > 1000
+union all select ram, price from phones_samsung21
+where price > 1000;
+
+
